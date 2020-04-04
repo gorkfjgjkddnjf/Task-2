@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand:400,500,700&display=swap&subset=latin-ext");
+body {
+  font-family: Quicksand, sans-serif;
+  width: 100%;
+}
+
+.ref0 {
+  text-align: left;
+  padding-left: 1%;
+}
+
+.ref1 {
+  text-align: right;
+  padding-right: 1%;
+}
+
+.btn-group-toggle .btn {
+  margin-bottom: 15px;
+  margin-right: 15px;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active {
+  color: #fff;
+  background-color: #0a427e;
+  border-color: #0a427e;
+}
+/*# sourceMappingURL=main.css.map */
