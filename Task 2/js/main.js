@@ -1,6 +1,6 @@
 //let requestURL = 'js/json/signin.json';
-let requestURL = 'js/json/interview.json';
-//let requestURL = 'js/json/addpost.json';
+//let requestURL = 'js/json/interview.json';
+let requestURL = 'js/json/addpost.json';
 //let requestURL = 'js/json/colorsheme.json';
 
 buildForm(requestURL);
@@ -21,6 +21,9 @@ function buildForm(requestURL) {
       buildButtons(jsonObj, form);
       //fe(form);
       mainContainer.append(form);
+
+      buildMask(jsonObj);
+
     });
 }
 
@@ -97,6 +100,7 @@ function buildInput(fields, i){
   else{
     input.className = 'form-check-input check';
     input.checked = fields.input.checked;
+    input.id = 'check' + i;
     input.addEventListener("click", backToDefaultColor);
   }
 
@@ -120,11 +124,9 @@ function buildInput(fields, i){
     
     textarea.required = fields.input.required;
     textarea.className = input.className;
+    textarea.id = 'test' + i;
     
     return textarea;
-  }
-  if(fields.input.mask != undefined){
-    $(input.id).mask(fields.input.mask);
   }
 
   buildInputFile(fields, input);
@@ -194,17 +196,12 @@ function buildRef(jsonObj, form){
       a.name = references.ref;
       a.href = '#';
 
-      if(references.input != undefined){
-        
-        row.append(buildInput(references, i));
 
-      }
-      if(references.hasOwnProperty('text without ref')){
-
+      if(references.hasOwnProperty('text without ref')) 
         p.textContent = references['text without ref'] + ' ';
+      
+      if(form.name == 'register') 
         row.className = 'text-center';
-
-      }
 
       a.addEventListener('click', {
         handleEvent(){
@@ -214,9 +211,18 @@ function buildRef(jsonObj, form){
         }
       });
 
-      p.append(a);
-      row.append(p);
 
+      if(references.input != undefined){
+        p.remove();
+        let wrapper = buildWrapper(references);
+        wrapper.append(buildInput(references, i));
+        row.className = 'pl-4';
+        form.append(wrapper);
+      }
+      else{
+        p.append(a);
+        row.append(p);
+      }
     });
     form.append(row);
 
@@ -302,3 +308,13 @@ function buildTechnology(techelem, i){
   return label;
 }
 
+function buildMask(jsonObj){
+
+  jsonObj.fields.forEach(function(fields, i){
+    if(fields.input.mask != undefined){
+      let input = document.querySelector('#test' + i);
+      input.type = 'text';
+      $('#test'+ i).mask(fields.input.mask);
+    }
+  })
+}
