@@ -14,17 +14,28 @@ function buildForm(requestURL) {
       let form = document.createElement('form');
 
       form.setAttribute('role', 'form');
-      form.setAttribute('name', 'signin');
+      form.setAttribute('name', jsonObj.name);
 
-      buildTitle(jsonObj, form);
       buildFields(jsonObj, form);
       buildRef(jsonObj,form);
       buildButtons(jsonObj, form);
-
+      //fe(form);
       mainContainer.append(form);
-
-  });
+    });
 }
+
+// function fe(form){
+//   let btn = document.querySelector('.my-2');
+//   if(btn.textContent == 'signin.json'){
+//     btn.addEventListener('click', {
+//       handleEvent(){
+//         form.remove();
+//         requestURL = 'js/json/signup.json';
+//         buildForm(requestURL);
+//       }
+//     });
+//   }
+// }
 
 function buildWrapper(fields){
 
@@ -33,6 +44,9 @@ function buildWrapper(fields){
 
   formGroup.className = 'form-group';
   //formRow.className = 'form-row justify-content-center';
+  if(fields.input.type == 'file'){
+    formGroup.className = 'custom-file my-2';
+  }
   if(fields.input.type == 'technology'){
     formGroup.className = 'btn-group-toggle';
     formGroup.setAttribute('data-toggle','buttons')
@@ -45,16 +59,6 @@ function buildWrapper(fields){
 
 }
 
-function buildTitle(jsonObj, form) {
-
-  let h1 = document.createElement('h4');
-
-  h1.className = 'text-center mb-4';
-  h1.textContent = jsonObj['name'];
-
-  form.prepend(h1);
-}
-
 function buildLabel(fields, i){
   if(fields.hasOwnProperty('label')){
     let label = document.createElement('label');
@@ -62,6 +66,15 @@ function buildLabel(fields, i){
     label.textContent = fields.label;
     if(fields.input.type == 'checkbox'){
       label.className = 'form-check-label';
+    }
+    if(fields.input.type == 'file'){
+      label.className = 'custom-file-label';
+    }
+    if(fields.input.type == 'technology'){
+      let col = document.createElement('div');
+      col.className = 'col pl-0';
+      col.append(label);
+      return col;
     }
     return label;
   }
@@ -75,7 +88,9 @@ function buildInput(fields, i){
 
   input.type = fields.input.type;
   input.id = 'test' + i;
-
+  if(fields.input.type == 'file'){
+    input.className = 'custom-file-input';
+  }
   if(fields.input.type != 'checkbox'){
     input.className = 'form-control form-control-lg';    
   }
@@ -87,6 +102,7 @@ function buildInput(fields, i){
 
   if(fields.input.hasOwnProperty('required')){
     input.required = fields.input.required;
+
   }
   if(fields.input.placeholder != undefined){
     input.placeholder = fields.input.placeholder;
@@ -107,6 +123,9 @@ function buildInput(fields, i){
     
     return textarea;
   }
+  if(fields.input.mask != undefined){
+    $(input.id).mask(fields.input.mask);
+  }
 
   buildInputFile(fields, input);
   return input;
@@ -120,8 +139,8 @@ function buildFields(jsonObj, form){
 
       wrapper.append(buildLabel(fields, i));
 
-      fields.input.technologies.forEach( (techelem,i) =>  wrapper.append(buildTechnology(techelem, i)))
-      
+      fields.input.technologies.forEach( (techelem,i) =>  wrapper.append(buildTechnology(techelem, i)));
+
     }
     else if(fields.input.type == 'checkbox'){
       wrapper.append(buildInput(fields, i), buildLabel(fields, i));
@@ -131,7 +150,6 @@ function buildFields(jsonObj, form){
     }
     
     form.append(wrapper);
-    
   });
 }
 
@@ -147,7 +165,7 @@ function buildButtons(jsonObj, form){
       let btn = document.createElement('input');
 
       col.className = 'col-6 col-sm-6 col-md-6';
-      btn.className = 'btn btn-primary w-100';
+      btn.className = 'btn btn-primary w-100 mb-5';
 
       btn.type = 'submit';
       btn.value = buttons.text;
@@ -176,13 +194,11 @@ function buildRef(jsonObj, form){
       a.name = references.ref;
       a.href = '#';
 
-      // if(references.input != undefined){
-      //   console.log(references.hasOwnProperty('input'));
-      //   p.append();
-      //   console.log(1);
-      //   console.log(typeof references);
+      if(references.input != undefined){
+        
+        row.append(buildInput(references, i));
 
-      // }
+      }
       if(references.hasOwnProperty('text without ref')){
 
         p.textContent = references['text without ref'] + ' ';
@@ -285,3 +301,4 @@ function buildTechnology(techelem, i){
   label.append(technologies);
   return label;
 }
+
