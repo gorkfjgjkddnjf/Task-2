@@ -1,7 +1,5 @@
-//let requestURL = 'js/json/signin.json';
-//let requestURL = 'js/json/interview.json';
-let requestURL = 'js/json/addpost.json';
-//let requestURL = 'js/json/colorsheme.json';
+let requestURL = 'js/json/signin.json';
+
 
 buildForm(requestURL);
 
@@ -19,26 +17,46 @@ function buildForm(requestURL) {
       buildFields(jsonObj, form);
       buildRef(jsonObj,form);
       buildButtons(jsonObj, form);
-      //fe(form);
+      buildLink(form);
       mainContainer.append(form);
-
+      
       buildMask(jsonObj);
 
     });
 }
 
-// function fe(form){
-//   let btn = document.querySelector('.my-2');
-//   if(btn.textContent == 'signin.json'){
-//     btn.addEventListener('click', {
-//       handleEvent(){
-//         form.remove();
-//         requestURL = 'js/json/signup.json';
-//         buildForm(requestURL);
-//       }
-//     });
-//   }
-// }
+function buildLink(form){
+  let link0 = document.querySelector('#link0');
+  let link1 = document.querySelector('#link1');
+  let link2 = document.querySelector('#link2');
+  let link3 = document.querySelector('#link3');
+  let link4 = document.querySelector('#link4');
+  link0.onclick = function(){
+    requestURL = 'js/json/signin.json'; 
+    form.remove();
+    buildForm(requestURL);
+  }
+  link1.onclick = function(){
+    requestURL = 'js/json/signup.json'; 
+    form.remove();
+    buildForm(requestURL);
+  }
+  link2.onclick = function(){
+    requestURL = 'js/json/colorsheme.json'; 
+    form.remove();
+    buildForm(requestURL);
+  }
+  link3.onclick = function(){
+    requestURL = 'js/json/addpost.json'; 
+    form.remove();
+    buildForm(requestURL);
+  }
+  link4.onclick = function(){
+    requestURL = 'js/json/interview.json';
+    form.remove();
+    buildForm(requestURL);
+  }  
+}
 
 function buildWrapper(fields){
 
@@ -99,7 +117,13 @@ function buildInput(fields, i){
   }
   else{
     input.className = 'form-check-input check';
-    input.checked = fields.input.checked;
+    if(fields.input.checked == 'false'){
+      input.checked = false;
+    }
+    else {
+      input.checked = true;
+    }
+    console.log(fields.input.checked);
     input.id = 'check' + i;
     input.addEventListener("click", backToDefaultColor);
   }
@@ -186,6 +210,7 @@ function buildRef(jsonObj, form){
   
   if(jsonObj.references != undefined){
     let row = document.createElement('div');
+    row.className = 'row justify-content-between';
 
     jsonObj.references.forEach(function(references, i){
 
@@ -201,7 +226,7 @@ function buildRef(jsonObj, form){
         p.textContent = references['text without ref'] + ' ';
       
       if(form.name == 'register') 
-        row.className = 'text-center';
+        row.className = ' text-center';
 
       a.addEventListener('click', {
         handleEvent(){
@@ -218,6 +243,14 @@ function buildRef(jsonObj, form){
         wrapper.append(buildInput(references, i));
         row.className = 'pl-4';
         form.append(wrapper);
+      }
+      else if(form.name == 'login'){
+        let col = document.createElement('div');
+        col.className = 'col-12 col-sm-5'; 
+        p.className = 'ref' + i;
+        p.append(a);
+        col.append(p);
+        row.append(col);
       }
       else{
         p.append(a);
